@@ -17,9 +17,9 @@ password:{
 },
 
 
-type:{
+category:{
     type:String,
-    default:"reqular"
+    default:"regular"
 },
 orderCount:{
     type:Number,

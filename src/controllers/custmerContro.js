@@ -8,40 +8,58 @@ try{
     let {name ,email,password} =data
 // ===name =====
     if(!name){return res.status(400).send({status:false , message:"provide your name"})}
+
+    if(typeof (name) != "string"){
+        return res.status(400).send({status:false , message:"name field should be in string"})
+    }
 name = data.name = name.trim()
 
-if(name != 'string' || name== ''){
-    return res.status(400).send({status:false , message:"name field can not be empty"})
-}
 //=========email
 if(!email){return res.status(400).send({status:false , message:"provide your email"})}
-email = data.email = email.trim()
 
-if(email != 'string' || email== ''){
+
+if(typeof(email) != 'string' || email== ''){
     return res.status(400).send({status:false , message:"email field can not be empty"})
 }
-// regex============lagana h
+email = data.email = email.trim()
+// regex============remains
 const emailExist = await customerModel.findOne({email:email})
 if(emailExist){return res.status({status:false , message:"email already exist"})}
 
 
 // password 
 if(!password){return res.status(400).send({status:false , message:"provide your password"})}
-password = data.password = password.trim()
 
-if(password != 'string' || password== ''){
+
+if(typeof (password) != 'string' || password== ''){
     return res.status(400).send({status:false , message:"password field can not be empty"})
 }
-
+password = data.password = password.trim()
 // regex for password ===================
 
 const saveCustomer = await customerModel.create(data)
 
 res.status(201).send({status:true , data:saveCustomer})
 
-}catch(err){
+} catch(err){
     return res.status(500).send({status:false , message:err.message})
 }
 }
 
-module.exports ={customerCreation}
+
+const getCustomer = async function(req, res){
+    const customerId = req.params.customerId
+
+    if(!customerId){return res.status(400).send({status:false , message:"please provide customer id"})}
+
+// if(!mongoose.isValidObjectId (customerId)){return res.status(400).send({status:false , message:"please provide valid customer id"})}
+console.log(customerId);
+const customerData = await customerModel.findById(customerId)
+res.status(200).send({status:false , message:customerData})
+
+
+}
+
+ 
+
+module.exports ={customerCreation,getCustomer}

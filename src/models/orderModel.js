@@ -1,8 +1,8 @@
 const mongoose =require('mongoose')
-const objectId = mongoose.Schema.Types.objectId
+const objectId = mongoose.Schema.Types.ObjectId
 const orderSchema = new mongoose.Schema({
 
-customer:{
+customerId:{
 type:objectId,
 ref:'customer',
 required:true
@@ -12,11 +12,11 @@ amount:{
     required:true
 },
 discount:{
-    type:Nummber,
+    type:Number,
     default:0
 },
 
 },{timestamp:true})
 
 
-module.exports =mongoose.model('order', orderSchema)
+module.exports = mongoose.model('order', orderSchema)
