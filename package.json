@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/akhileshsoni098/newCompanyProject/issues"
   },
-  "homepage": "https://github.com/akhileshsoni098/newCompanyProject#readme"
+  "homepage": "https://github.com/akhileshsoni098/newCompanyProject#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.9.0",
+    "nodemon": "^2.0.20"
+  }
 }
