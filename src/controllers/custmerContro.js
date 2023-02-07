@@ -22,7 +22,7 @@ if(typeof(email) != 'string' || email== ''){
     return res.status(400).send({status:false , message:"email field can not be empty"})
 }
 email = data.email = email.trim()
-// regex============remains
+
 const emailExist = await customerModel.findOne({email:email})
 if(emailExist){return res.status({status:false , message:"email already exist"})}
 
@@ -35,7 +35,7 @@ if(typeof (password) != 'string' || password== ''){
     return res.status(400).send({status:false , message:"password field can not be empty"})
 }
 password = data.password = password.trim()
-// regex for password ===================
+
 
 const saveCustomer = await customerModel.create(data)
 
@@ -48,6 +48,7 @@ res.status(201).send({status:true , data:saveCustomer})
 
 
 const getCustomer = async function(req, res){
+    try{
     const customerId = req.params.customerId
 
     if(!customerId){return res.status(400).send({status:false , message:"please provide customer id"})}
@@ -57,9 +58,12 @@ console.log(customerId);
 const customerData = await customerModel.findById(customerId)
 res.status(200).send({status:false , message:customerData})
 
-
+    }catch(err){
+        return res.status(500).send({status:false , message:err.message})
+    }
 }
 
  
 
 module.exports ={customerCreation,getCustomer}
+ 

@@ -5,7 +5,7 @@ const orderModel = require("../models/orderModel")
 const customerModel = require("../models/custmerModel")
 
 const orderCreation = async function(req , res){
-
+try{
 let orderData = req.body
 let {customerId , amount } = orderData 
 
@@ -13,31 +13,24 @@ if(!customerId){return res.status(400).send({status:false , message:"please prov
 if(!isValidObjectId (customerId)){return res.status(400).send({status:false , message:"please provide valid customer id"})}
 
 let customerDetails = await customerModel.findById(customerId)
-// ● Gold = 10% discount, platinum = 20% discount 
+
 let discount =0
 console.log(typeof (customerDetails.category) ,"  category type")
 console.log(customerDetails.category, "   category")
 if(customerDetails.category =="gold"){
     discount =amount*0.1 
-    amount = amount-discount
+    
 
-console.log(discount)
-console.log(amount)
-
-
-    await orderModel.findOneAndUpdate({customerId:customerId},{$set:{amount:amount, discount:discount}},{new:true})
+    await orderModel.findOneAndUpdate({customerId:customerId},{$set:{discount:discount}},{new:true})
 
 } 
 else if(customerDetails.category =="platinum"){
     discount = amount*0.2
-    amount = amount-discount
+   
 
-await orderModel.findOneAndUpdate({customerId:customerId},{$set:{amount:amount, discount:discount}},{new:true})
+await orderModel.findOneAndUpdate({customerId:customerId},{$set:{discount:discount}},{new:true})
 
 }
-
-// ○ Customer is promoted to gold when he has placed 10 orders
-// ○ Customer is promoted to platinum when he has placed 20 orders
 
 
 
@@ -62,21 +55,29 @@ const orderDetails = {customerId:customerId,amount,discount }
 let savedOrder = await orderModel.create(orderDetails)
 
 return res.status(201).send({status:true, data:savedOrder})
- 
+}catch(err){
+    res.status(500).send({status:false , message:err.message})
+}
 }
  
 const getOrder = async function (req, res){
-
+try{
     const customerId = req.params.customerId
+    if(!customerId){return res.status(400).send({status:false , message:"please provide customer id"})}
 
-const allOrders = await orderModel.find({customerId:customerId}).sort({amount: 1})
-if(allOrders.length==0){
-  return res.status(404).send({status:false , message:"no order found"})
+    if(!isValidObjectId(customerId)){ return res.status(400).send({status:false , message:"Please provide valid id"}) }
+    const allOrders = await orderModel.find({customerId:customerId}).sort({amount: 1})
+    if(allOrders.length==0){
+      return res.status(404).send({status:false , message:"no order found"})
+    }
+    
+    res.status(200).send({status:false , data:allOrders})
+
+}catch(err){
+    res.status(500).send({status:false , message:err.message})
 }
-
-res.status(200).send({status:false , data:allOrders})
 }
-
+    
 
 
 module.exports = {orderCreation,getOrder }
